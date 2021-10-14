@@ -34,28 +34,56 @@ main {
     border-radius: 9px;
     overflow: hidden;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
+    /* align-items: center; */
   }
 
 .name{
   position: absolute;
-  left: .5rem;
+  /* left: .5rem; */
   font-size:4rem;
   letter-spacing: 1px;
   font-weight: 300;
   margin-bottom: 1rem;
-} 
-.score{
-  position: relative;
-  left:0.5rem;
 }
+
+.score{   
+  position: relative;
+  font-size: 4rem;
+  margin-bottom: auto;
+  text-shadow: 0.2rem 0.5rem 1rem;
+}
+
+.game-title{
+  font-size: 8rem;
+  text-shadow: 0.2rem 0.5rem 1rem;
+}
+
+.title-active{
+  font-size: 1rem;
+}
+
+.game-area{
+  flex:50%;
+  padding: 9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.75s;
+}
+
+.game-ended{
+  font-size: 8rem;
+}
+
 .note{
-  position: absolute;
-  left: 50%;
-  top: 16.5rem;
-  transform: translateX(-50%);
+  position: relative;
+  /* left: 50%; */
+  /* top: 16.5rem; */
+  /* transform: translateX(-50%); */
   height: 35rem;
-  box-shadow: 0 2rem 5rem rgba(0,0,0,02);
+  box-shadow: 0 2rem 5rem rgba(0,0,0,2);
+  backdrop-filter: blur(10px);
   border-radius: 9px;
 }
 
@@ -66,6 +94,7 @@ main {
 .btn {
   position: absolute;
   left: 50%;
+  height:4rem;
   transform: translateX(-50%);
   color: #444;
   background: none;
@@ -76,16 +105,14 @@ main {
   cursor: pointer;
   font-weight: 400;
   transition: all 0.2s;
-
   background-color: white;
   background-color: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(10px);
-
   padding: 0.7rem 2.5rem;
   border-radius: 50rem;
-  box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 02);
 }
 
 .btn--new{
-  top:4rem;
+  bottom:4rem;
 }

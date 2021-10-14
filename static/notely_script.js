@@ -1,5 +1,7 @@
 "use strict";
 
+const testStr = "abcdefg"
+
 const trebNotes = {
     0: "E",
     1: "F",
@@ -25,7 +27,9 @@ const bassNotes = {
 }
 
 // selectors
+const titleEl = document.querySelector(".game-title")
 const noteEl = document.querySelector(".note")
+const scoreEl = document.querySelector(".score")
 const newGameBtn = document.querySelector(".btn--new")
 
 // instantiating variables
@@ -49,8 +53,18 @@ const renderTest = function(note, clef= "treb"){
     noteEl.src =    `../static/assets/notes/0${note}_${clef}_q.jpg`
 }
 
-const renderResults = function(score){
-    
+const renderNewGame = function(){
+    scoreEl.classList.remove("game-ended")
+    newGameBtn.classList.add("hidden")
+    titleEl.classList.add("title-active")
+    scoreEl.classList.remove("hidden")
+}
+
+const renderResults = function(){
+    newGameBtn.classList.remove("hidden")
+    titleEl.classList.remove("title-active")
+    noteEl.classList.add("hidden")
+    scoreEl.classList.add("game-ended")
 }
 
 const answer = function(renderNote, renderClef){
@@ -71,7 +85,7 @@ newGameBtn.addEventListener("click", function(){
     gameActive = true;
     testNote = note();
     testClef = clef(); 
-    newGameBtn.classList.add("hidden")
+    renderNewGame();
     renderTest(testNote, testClef);
 })
 
@@ -79,16 +93,15 @@ newGameBtn.addEventListener("click", function(){
 document.onkeydown = function(e){
     if (!gameActive){
         return
+    } else if (!testStr.includes(e.key)){
+        return
     }
-    answer(testNote,testClef).toLowerCase() === e.key ?
-        console.log("CORRECT!"):
-        console.log(`INCORRECT! Correct note is ${answer(testNote,testClef)}`)
+    const correctNote = answer(testNote, testClef)
+    console.log(`${correctNote === e.key.toUpperCase() ? "CORRECT!" : `INCORRECT! Correct note is ${correctNote}`}`)
     noteCount -=1;
     if(noteCount===0){
         console.log("Game over!")
         gameActive=false;
-        newGameBtn.classList.remove('hidden')
-        noteEl.classList.add("hidden")
         renderResults();
         return
     }
