@@ -1,5 +1,5 @@
 "use strict";
-
+// DEFINING LOOKUPS
 const testStr = "abcdefg"
 
 const trebNotes = {
@@ -26,70 +26,61 @@ const bassNotes = {
     8: "A",
 }
 
-// selectors
+// SELECTORS
 const titleEl = document.querySelector(".game-title")
 const noteEl = document.querySelector(".note")
 const scoreEl = document.querySelector(".score")
 const newGameBtn = document.querySelector(".btn--new")
 
-// instantiating variables
-let testNote, testClef, noteCount;
+// INSTANTIATING VARIABLES
+let testNote, testClef, noteCount, score = 0;
 let gameActive = false
 
-// game logic here
-
-const note = function (){
-    //generates random number between 0 and 8 to represent note
+// FUNCTION DECLARATIONS
+const note = function (){//generates random number between 0 and 8 to represent note
     return Number(Math.trunc(Math.random() * 9));}
 
-const clef = function() {
-    // generates random number between 0 and 1 to represent bass or treble clef
+const clef = function() { // generates random number between 0 and 1 to represent bass or treble clef
     const coinFlip = Number(Math.trunc(Math.random()*2));
     return coinFlip === 1? "treb":"bass"}
 
-const renderTest = function(note, clef= "treb"){
-    // renders note on player UI
+const answer = function(renderNote, renderClef){ // returns appropiate alphabetic representation of note
+    return renderClef === "treb" ? trebNotes[renderNote] : bassNotes[renderNote]
+}
+
+const newNote = function(note, clef= "treb"){ // renders note on player UI
     noteEl.classList.remove("hidden")
     noteEl.src =    `../static/assets/notes/0${note}_${clef}_q.jpg`
 }
 
-const renderNewGame = function(){
-    scoreEl.classList.remove("game-ended")
+const renderNewGame = function(){ // unhides game UI during play
     newGameBtn.classList.add("hidden")
     titleEl.classList.add("title-active")
     scoreEl.classList.remove("hidden")
+    scoreEl.classList.remove("game-ended")
+    gameCycle();
 }
 
-const renderResults = function(){
+const renderResults = function(){ // hides game UI, upsizes score
     newGameBtn.classList.remove("hidden")
     titleEl.classList.remove("title-active")
     noteEl.classList.add("hidden")
     scoreEl.classList.add("game-ended")
 }
 
-const answer = function(renderNote, renderClef){
-    // generates appropiate alphabetic representation of note
-    if (renderClef === "treb"){
-        return trebNotes[renderNote]
-    } else {
-        return bassNotes[renderNote]
-    }
-}
-
-// game logic should call a note, then wait for key input, then call correct or not.
-
-// listeners
-
-newGameBtn.addEventListener("click", function(){
-    noteCount = 8;
+const gameCycle = function(){ //activates game state, generates new note and clef, passes note and clef to render function
     gameActive = true;
     testNote = note();
-    testClef = clef(); 
+    testClef = clef();
+    newNote(testNote, testClef); 
+}
+
+// LISTENERS
+newGameBtn.addEventListener("click", function(){
+    noteCount = 8;
     renderNewGame();
-    renderTest(testNote, testClef);
 })
 
-// if correct key is pressed, "correct", if not, "incorrect".
 document.onkeydown = function(e){
     if (!gameActive){
         return
@@ -97,15 +88,19 @@ document.onkeydown = function(e){
         return
     }
     const correctNote = answer(testNote, testClef)
-    console.log(`${correctNote === e.key.toUpperCase() ? "CORRECT!" : `INCORRECT! Correct note is ${correctNote}`}`)
+    if (correctNote === e.key.toUpperCase()){
+    console.log("CORRECT!")
+    score ++;  
+    scoreEl.textContent = `${score}/8`
+    } else {
+        console.log(`INCORRECT! Correct note is ${correctNote}`)
+    }
+    gameActive = false; // setting game state to inactive to prevent spam-abuse of score during delay between notes
     noteCount -=1;
     if(noteCount===0){
         console.log("Game over!")
-        gameActive=false;
         renderResults();
         return
     }
-    testNote = note();
-    testClef = clef();
-    renderTest(testNote, testClef);
+    setTimeout(()=>{gameCycle()}, 2000) // wait 2 seconds to display correct/incorrect
 }
